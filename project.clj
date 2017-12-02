@@ -7,7 +7,4 @@
 				 [ring "1.6.2"]
 				 [compojure "1.6.0"]
 				 [serial-port "1.1.2"]]
-  :main vroom.core
-  :profiles {:dev
-				{:source-paths ["src" "dev"]
-				:main vroom.dev}})
+  :main vroom.core)
