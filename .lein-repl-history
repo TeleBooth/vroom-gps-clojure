@@ -1,1 +1,13 @@
 quit
+exit
+main 8000
+-main 8000
+run 8000
+(-main 8000)
+exit
+(-dev-main 8000)
+exit
+(-dev-main 8000)
+exit
+(-dev-main 8000)
+exit
