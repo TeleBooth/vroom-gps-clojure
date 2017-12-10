@@ -9,5 +9,17 @@
 				 [serial-port "1.1.2"]
 				 [http-kit "2.2.0"]
 				 [com.cognitect/transit-clj "0.8.300"]
-				 [com.taoensso/sente "1.11.0"]]
+				 [com.taoensso/sente "1.11.0"]
+				 [com.taoensso/timbre "4.7.4"]
+				 [hiccup "1.0.5"]
+				 [ring/ring-defaults "0.3.1"]
+				 [clj-serial "2.0.3"]
+				 [proto-repl "0.3.1"]]
+
+  :global-vars {*warn-on-reflection* true
+                *assert* true}
+
   :main vroom.core)
+  (require 'cemerick.pomegranate.aether)
+(cemerick.pomegranate.aether/register-wagon-factory!
+ "http" #(org.apache.maven.wagon.providers.http.HttpWagon.))

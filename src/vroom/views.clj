@@ -1,4 +1,5 @@
-(ns vroom.views)
+(ns vroom.views
+	(import [java.lang Integer Object]))
 
 (defn welcome
 	"A ring handler to process all requests sent to the webapp"
