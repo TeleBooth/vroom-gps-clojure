@@ -48,3 +48,4 @@ Temporary Items
 target/classes/META-INF/maven/vroom/vroom/pom.properties
 target/repl-port
 .nrepl-port
+.lein-repl-history
