@@ -16,11 +16,13 @@
 				 [clj-serial "2.0.3"]
 				 [proto-repl "0.3.1"]
          [com.cemerick/pomegranate "1.0.0"]]
-         
+
   :plugins [[lein-heroku "0.5.3"]]
 
   :global-vars {*warn-on-reflection* true
                 *assert* true}
+
+  :heroku {:app-name "vroom"}
 
   :profiles {:uberjar {:aot :all}}
   :main vroom.core)
