@@ -1,5 +1,6 @@
 (ns vroom.core
-	(:require [org.httpkit.server :as http-kit]
+		(:gen-class)
+		(:require [org.httpkit.server :as http-kit]
 				[ring.middleware.reload :refer [wrap-reload]]
 				[clojure.walk :as walk]
 				[ring.middleware.defaults]
