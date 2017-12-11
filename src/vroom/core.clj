@@ -14,7 +14,7 @@
 				[cognitect.transit :as transit]
 				[taoensso.sente.packers.transit :as sente-transit]
 				[taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
-				[serial.core :as serial])
+				'[serial.core :as serial])
 	(:import [java.io ByteArrayInputStream ByteArrayOutputStream]
 			[java.lang Integer]))
 
