@@ -121,9 +121,8 @@
 
 (defn -main
 	"A very simple web server using Ring & Jetty"
-	[port-number]
 	;;starts the socket server
-	(start-web-server! port-number)
+	(start-web-server!)
 	;;starts broadcasting
 	(start-gps-broadcaster!)
 	;;starts listening on the serial port and passing it to the buffer
