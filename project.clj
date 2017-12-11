@@ -20,6 +20,6 @@
                 *assert* true}
 
   :main vroom.core)
-  (require 'cemerick.pomegranate.aether)
+(require 'cemerick.pomegranate.aether)
 (cemerick.pomegranate.aether/register-wagon-factory!
  "http" #(org.apache.maven.wagon.providers.http.HttpWagon.))

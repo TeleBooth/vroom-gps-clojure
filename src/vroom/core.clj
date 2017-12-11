@@ -14,7 +14,7 @@
 				[cognitect.transit :as transit]
 				[taoensso.sente.packers.transit :as sente-transit]
 				[taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
-				'[serial.core :as serial])
+				[serial.core :as serial])
 	(:import [java.io ByteArrayInputStream ByteArrayOutputStream]
 			[java.lang Integer]))
 
@@ -28,14 +28,11 @@
   ([stream n] (exhaust-stream stream n '()))
   ([stream n buf-so-far]
    (let [new-buf (byte-array n)
-         read-len (.read stream new-buf)
+         read-len (.read ^ByteArrayInputStream stream new-buf)
          buf-with-new (concat buf-so-far (take read-len new-buf))]
      (if (< read-len n)
        buf-with-new
        (recur stream n buf-with-new)))))
-
-(def serial-port (serial/open "COM3" :baud-rate 9600))
-(serial/listen! serial-port (fn [stream] (swap! buffers-atom concat (exhaust-stream stream n))))
 
 ;;stuff for sente
 
@@ -57,30 +54,10 @@
   (def connected-uids                connected-uids) ; Watchable, read-only atom
   )
 
-  
-
-;; transit stuff
-
-;; Serial read handler
-;; to-be-written
-
-;; Write data to a stream
-(def out (ByteArrayOutputStream. 4096))
-(def writer (transit/writer out :json))
-(defn write-string [string]
-	(transit/write writer string))
-
-;; Read data from a stream
-(def in (ByteArrayInputStream. (.toByteArray out)))
-(def reader (transit/reader in :json))
-
-
-
-
-;; Broadcast to be used for gps transmissions	  
+;; Broadcast to be used for gps transmissions
 (defonce broadcast-enabled?_ (atom true))
 
-(defn start-example-broadcaster!
+(defn start-gps-broadcaster!
   "As an example of server>user async pushes, setup a loop to broadcast an
   event to all connected users every 10 seconds"
   []
@@ -88,9 +65,12 @@
         (fn [i]
           (let [uids (:any @connected-uids)]
             (debugf "Broadcasting server>user: %s uids" (count uids))
-            (debugf "Broadcasting serial data sent through transit: %s" ())
+            (debugf "Broadcasting serial data sent through transit: %s" (->> @buffers-atom (map char) (apply str)))
+						;;for each uid, broadcast the GPS coordinate string
 			(doseq [uid uids]
-              (chsk-send! uid))))]
+              (chsk-send! uid (->> @buffers-atom (map char) (apply str)))))
+						;;reset the buffer at the end
+						(reset! buffers-atom []))]
 
     (go-loop [i 0]
       (<! (async/timeout 10000))
@@ -99,29 +79,28 @@
 
 
 
-  
+
 (defroutes app-routes
 	(GET  "/chsk" req (ring-ajax-get-or-ws-handshake req))
 	(POST "/chsk" req (ring-ajax-post                req))
 	r/routes)
-	
+
 (def app
 	(-> app-routes
 	  ring.middleware.keyword-params/wrap-keyword-params
       ring.middleware.params/wrap-params))
 
 (defn login-handler
-  "Here's where you'll add your server-side login/auth procedure (Friend, etc.).
-  In our simplified example we'll just always successfully authenticate the user
-  with whatever user-id they provided in the auth request."
+  ;;In this simplified example we'll just always successfully authenticate the user
+  ;;with whatever user-id they provided in the auth request.
   [ring-req]
   (let [{:keys [session params]} ring-req
         {:keys [user-id]} params]
     (debugf "Login request: %s" params)
     {:status 200 :session (assoc session :uid user-id)}))
-	
+
 (defonce    web-server_ (atom nil)) ; (fn stop [])
-(defn  stop-web-server! [] (when-let [stop-fn @web-server_] (stop-fn)))	  
+(defn  stop-web-server! [] (when-let [stop-fn @web-server_] (stop-fn)))
 (defn start-web-server! [& [port]]
   (stop-web-server!)
   (let [port (or port 0) ; 0 => Choose any available port
@@ -139,8 +118,14 @@
       (catch java.awt.HeadlessException _))
 
     (reset! web-server_ stop-fn)))
-	
+
 (defn -main
 	"A very simple web server using Ring & Jetty"
 	[port-number]
-	(start-web-server! 8000))
+	;;starts the socket server
+	(start-web-server! port-number)
+	;;starts broadcasting
+	(start-gps-broadcaster!)
+	;;starts listening on the serial port and passing it to the buffer
+	(def serial-port (serial/open "COM3" :baud-rate 9600))
+	(serial/listen! serial-port (fn [stream] (swap! buffers-atom concat (exhaust-stream stream n)))))
