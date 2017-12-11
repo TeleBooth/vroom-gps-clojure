@@ -120,12 +120,12 @@
 
     (reset! web-server_ stop-fn)))
 
-(defn -main [serial-port-number]
+(defn -main []
 	"A very simple web server using Ring & Jetty"
 	;;starts the socket server
 	(start-web-server!)
 	;;starts broadcasting
 	(start-gps-broadcaster!)
 	;;starts listening on the serial port and passing it to the buffer
-	(def serial-port (serial/open serial-port-number :baud-rate 9600))
+	(def serial-port (serial/open "COM3" :baud-rate 9600))
 	(serial/listen! serial-port (fn [stream] (swap! buffers-atom concat (exhaust-stream stream n)))))
