@@ -119,7 +119,7 @@
 
     (reset! web-server_ stop-fn)))
 
-(defn -main
+(defn -main []
 	"A very simple web server using Ring & Jetty"
 	;;starts the socket server
 	(start-web-server!)
