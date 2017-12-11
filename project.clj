@@ -14,7 +14,8 @@
 				 [hiccup "1.0.5"]
 				 [ring/ring-defaults "0.3.1"]
 				 [clj-serial "2.0.3"]
-				 [proto-repl "0.3.1"]]
+				 [proto-repl "0.3.1"]
+         [com.cemerick/pomegranate "1.0.0"]]
 
   :global-vars {*warn-on-reflection* true
                 *assert* true}
