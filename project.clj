@@ -20,8 +20,7 @@
   :global-vars {*warn-on-reflection* true
                 *assert* true}
 
-  :main vroom.core
-  :aot [vroom.core])
+  :main vroom.core)
   (require 'cemerick.pomegranate.aether)
   (cemerick.pomegranate.aether/register-wagon-factory!
    "http" #(org.apache.maven.wagon.providers.http.HttpWagon.))
