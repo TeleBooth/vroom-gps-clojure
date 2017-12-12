@@ -49,3 +49,4 @@ target/classes/META-INF/maven/vroom/vroom/pom.properties
 target/repl-port
 .nrepl-port
 .lein-repl-history
+target/stale/leiningen.core.classpath.extract-native-dependencies
