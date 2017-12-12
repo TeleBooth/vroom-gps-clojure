@@ -73,7 +73,7 @@
 						(reset! buffers-atom []))]
 
     (go-loop [i 0]
-      (<! (async/timeout 10000))
+      (<! (async/timeout 1000))
       (when @broadcast-enabled?_ (broadcast! i))
       (recur (inc i)))))
 
